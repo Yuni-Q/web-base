@@ -17,10 +17,11 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        // test: /\.js$/, // .js 확장자로 끝나는 모든 파일
-        // use: [path.resolve("./myloader.js")] // 방금 만든 로더를 적용한다
-      },
+      // {
+      // test: /\.js$/, // .js 확장자로 끝나는 모든 파일
+      // use: [path.resolve("./myloader.js")] // 방금 만든 로더를 적용한다
+      // },
+
       {
         test: /\.css$/,
         use: [
@@ -38,6 +39,11 @@ module.exports = {
           name: "[name].[ext]?[hash]", // 파일명 형식
           limit: 200000 // 2kb
         }
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: "babel-loader" // 바벨 로더를 추가한다
       }
     ]
   },

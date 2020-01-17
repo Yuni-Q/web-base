@@ -1,0 +1,3 @@
+const alert = msg => window.alert(msg);
+// 바벨이 변경 할 수 없다...
+new Promise();
