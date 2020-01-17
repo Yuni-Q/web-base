@@ -1,5 +1,8 @@
 const path = require("path");
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // const Myplugin = require("./myplugin");
 
@@ -20,7 +23,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: [
+          process.env.NODE_ENV === "production"
+            ? MiniCssExtractPlugin.loader // 프로덕션 환경
+            : "style-loader", // 개발 환경
+          "css-loader"
+        ]
       },
       {
         test: /\.(png|gif|jpg|svg)$/,
@@ -39,6 +47,19 @@ module.exports = {
       banner: () => `빌드 날짜: ${new Date().toLocaleString()}`
     }),
     // string을 보낼 때는 JSON.stringfy로 감싸서 한다.
-    new webpack.DefinePlugin({})
+    new webpack.DefinePlugin({}),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      templateParameters: {
+        env: process.env.NODE_ENV === "development" ? "(개발용)" : ""
+      },
+      hash: true // 정적 파일을 불러올때 쿼리문자열에 웹팩 해쉬값을 추가한다
+    }),
+    new CleanWebpackPlugin()
+    // development에서는 불필요해서 사용하지 않는다.
+    // loader도 있어서 loader에서 사용해도 된다.
+    // ...(process.env.NODE_ENV === "production"
+    //   ? [new MiniCssExtractPlugin({ filename: `[name].css?[hash]` })]
+    //   : [])
   ]
 };
